@@ -8,11 +8,12 @@ import webUITemplate.session.Session;
 
 public class TodolyBaseTest {
 
-    MenuSection menuSection = new MenuSection();
-    MainPage mainPage = new MainPage();
-    LoginSection loginSection = new LoginSection();
-    ItemsSection itemsSection = new ItemsSection();
-    ProfileSection profileSection = new ProfileSection();
+    public MenuSection menuSection = new MenuSection();
+    public MainPage mainPage = new MainPage();
+    public SignUpSection signUpSection = new SignUpSection();
+    public LoginSection loginSection = new LoginSection();
+    public ItemsSection itemsSection = new ItemsSection();
+    public ProfileSection profileSection = new ProfileSection();
 
     @AfterEach
     public void close(){
