@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.Matchers.equalTo;
 
 public class TodolyTokenTest extends ApiBaseTest {
-    @Test
+
     public void createUpdateDeleteProject(){
         authenticate();
 

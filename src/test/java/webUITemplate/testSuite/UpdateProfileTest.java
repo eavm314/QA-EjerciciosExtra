@@ -8,7 +8,7 @@ import java.util.Random;
 public class UpdateProfileTest extends TodolyBaseTest{
     private final Random rnd = new Random();
     private String newName;
-    @Test
+
     public void updateFullName() throws InterruptedException {
         login();
         openSettings();

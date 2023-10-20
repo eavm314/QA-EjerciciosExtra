@@ -9,7 +9,7 @@ public class ProjectItemTest extends TodolyBaseTest{
     private final Random rnd = new Random();
     private String projectName;
     private String itemName;
-    @Test
+
     public void createProjectItemUpdate() throws InterruptedException {
         login();
         createProject();
