@@ -12,6 +12,7 @@ public class TodoistBaseTest {
     public SignUpPage signUpPage = new SignUpPage();
     public LoginPage loginPage = new LoginPage();
     public AppPage appPage = new AppPage();
+    public SettingsPage settingsPage = new SettingsPage();
     public ProjectsSection projectsSection = new ProjectsSection();
 
     @AfterEach
@@ -24,7 +25,6 @@ public class TodoistBaseTest {
         Session.getInstance().getBrowser().get("https://todoist.com/");
     }
 
-    @Test
     public void login(){
         landingPage.enterLoginButton.click();
         loginPage.emailInput.setText("eavm2021@gmail.com");
@@ -32,7 +32,7 @@ public class TodoistBaseTest {
 
         loginPage.logInButton.click();
 
-        Assertions.assertTrue(appPage.todayTitle.isControlDisplayed(),
+        Assertions.assertTrue(appPage.profileButton.isControlDisplayed(),
                 "ERROR no se pudo iniciar sesion");
 
     }

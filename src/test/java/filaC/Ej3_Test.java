@@ -11,44 +11,24 @@ public class Ej3_Test extends TodoistBaseTest {
     private final Random rnd = new Random();
 
     @Test
-    public void testing() throws InterruptedException {
-        createUser();
-        createProject();
+    public void testing(){
+        login();
+        updateName();
     }
 
-    private void createUser() throws InterruptedException {
-        String randomEmail = "enrique" + rnd.nextInt() + "@gmail.com";
-        String randomPassword = "pwd" + rnd.nextInt();
+    private void updateName(){
+        String randomName = "Name" + rnd.nextInt();
 
-        landingPage.startForFreeButton.click();
+        appPage.profileButton.click();
+        appPage.settingsButton.click();
 
-        signUpPage.emailInput.setText(randomEmail);
-        signUpPage.passwordInput.setText(randomPassword);
-        signUpPage.signInButton.click();
+        settingsPage.nameInput.clearSetText(randomName);
+        settingsPage.updateButton.click();
 
-        signUpPage.nameInput.setText("Enrique");
-        signUpPage.continueButton.click();
+        settingsPage.closeSettingsButton.click();
 
-        signUpPage.personalAccountButton.click();
-        Thread.sleep(1000);
-        signUpPage.launchButton.click();
-
-        appPage.dismissButton.click();
-
-        Assertions.assertTrue(appPage.todayTitle.isControlDisplayed(),
-                "Error: No se pudo crear la cuenta");
+        Assertions.assertTrue(appPage.getProfileName(randomName).isControlDisplayed(),
+                "Error: No se cambio el nombre");
     }
 
-    private void createProject(){
-        String randomProjectName = "Project " + rnd.nextInt();
-
-        projectsSection.projectsButton.click();
-        projectsSection.addProjectButton.click();
-
-        projectsSection.nameInput.setText(randomProjectName);
-        projectsSection.addButton.click();
-
-        Assertions.assertTrue(appPage.getProjectTitle(randomProjectName).isControlDisplayed(),
-                "Error: No se pudo crear el projecto");
-    }
 }
