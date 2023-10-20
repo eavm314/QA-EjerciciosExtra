@@ -20,10 +20,9 @@ public class Ej1_Test extends ApiBaseTest {
     @Test
     public void testing() {
         createUser();
-        authenticate();
         createProject();
-        deleteToken();
-        createProjectWithoutToken();
+        deleteUser();
+        createProjectWithoutAuth();
     }
 
     private void createUser() {
@@ -55,22 +54,23 @@ public class Ej1_Test extends ApiBaseTest {
         body.put("Content", randomContent);
 
         requestInfo.setUrl(Configuration.host + "/api/projects.json")
-                .setBody(body.toString());
+                .setBody(body.toString())
+                .setBasicAuthNeeded(true);
+
         response = FactoryRequest.make(post).send(requestInfo);
         response.then().statusCode(200).
                 body("Content", equalTo(body.get("Content")));
     }
 
-    private void deleteToken() {
-        requestInfo.setUrl(Configuration.host + "/api/authentication/token.json");
+    private void deleteUser() {
+        requestInfo.setUrl(Configuration.host + "/api/user/0.json");
         response = FactoryRequest.make(delete).send(requestInfo);
         response.then()
                 .statusCode(200)
-                .body("UserEmail", equalTo(Configuration.user))
-                .body("TokenString", equalTo(requestInfo.getHeaders().get("Token")));
+                .body("Email", equalTo(Configuration.user));
     }
 
-    private void createProjectWithoutToken() {
+    private void createProjectWithoutAuth() {
         String randomContent = "Project " + rnd.nextInt();
 
         JSONObject body = new JSONObject();
@@ -80,7 +80,7 @@ public class Ej1_Test extends ApiBaseTest {
                 .setBody(body.toString());
         response = FactoryRequest.make(post).send(requestInfo);
         response.then().statusCode(200).
-                body("ErrorMessage", equalTo("Not Authenticated"))
-                .body("ErrorCode", equalTo(102));
+                body("ErrorMessage", equalTo("Account doesn't exist"))
+                .body("ErrorCode", equalTo(105));
     }
 }

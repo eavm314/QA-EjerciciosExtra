@@ -20,9 +20,9 @@ public class Ej1_Test extends ApiBaseTest {
     public void testing() {
         createUser();
         authenticate();
-        createProject();
+        createItem();
         deleteToken();
-        createProjectWithoutToken();
+        createItemWithoutToken();
     }
 
     private void createUser() {
@@ -47,13 +47,13 @@ public class Ej1_Test extends ApiBaseTest {
                 .body("FullName", equalTo(body.get("FullName")));
     }
 
-    private void createProject() {
-        String randomContent = "Project " + rnd.nextInt();
+    private void createItem() {
+        String randomContent = "Item " + rnd.nextInt();
 
         JSONObject body = new JSONObject();
         body.put("Content", randomContent);
 
-        requestInfo.setUrl(Configuration.host + "/api/projects.json")
+        requestInfo.setUrl(Configuration.host + "/api/items.json")
                 .setBody(body.toString());
         response = FactoryRequest.make(post).send(requestInfo);
         response.then().statusCode(200).
@@ -69,13 +69,13 @@ public class Ej1_Test extends ApiBaseTest {
                 .body("TokenString", equalTo(requestInfo.getHeaders().get("Token")));
     }
 
-    private void createProjectWithoutToken() {
-        String randomContent = "Project " + rnd.nextInt();
+    private void createItemWithoutToken() {
+        String randomContent = "Item " + rnd.nextInt();
 
         JSONObject body = new JSONObject();
         body.put("Content", randomContent);
 
-        requestInfo.setUrl(Configuration.host + "/api/projects.json")
+        requestInfo.setUrl(Configuration.host + "/api/items.json")
                 .setBody(body.toString());
         response = FactoryRequest.make(post).send(requestInfo);
         response.then().statusCode(200).

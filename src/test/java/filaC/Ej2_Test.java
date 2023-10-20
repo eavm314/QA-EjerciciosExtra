@@ -4,7 +4,10 @@ import apiTestTemplate.config.Configuration;
 import apiTestTemplate.factory.FactoryRequest;
 import apiTestTemplate.testSuite.ApiBaseTest;
 import org.json.JSONObject;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,53 +18,45 @@ import static org.hamcrest.Matchers.equalTo;
 public class Ej2_Test extends ApiBaseTest {
     // 2) 15% API Test > Crear 4 users y luego eliminar todos los 4 users - todo.ly
     private final Random rnd = new Random();
-    private List<Integer> itemIds = new ArrayList<>();
-    @Test
-    public void testing(){
-        authenticate();
-
-        for (int i = 0; i < 4; i++) {
-            createItem();
-        }
-
-        getItems();
-
-        for (Integer id: itemIds) {
-            deleteItem(id);
-        }
-
+    @ParameterizedTest
+    @CsvSource(
+            {
+                    "enrique1@gmail.com, eavm111",
+                    "enrique2@gmail.com, eavm222",
+                    "enrique3@gmail.com, eavm333",
+                    "enrique4@gmail.com, eavm444",
+            }
+    )
+    public void createDeleteUser(String email, String password) {
+        createUser(email, password);
+        deleteUser();
     }
 
-    private void createItem(){
-        String randomContent = "Item " + rnd.nextInt();
+    private void createUser(String email, String password) {
+        Configuration.user = email;
+        Configuration.password = password;
 
         JSONObject body = new JSONObject();
-        body.put("Content", randomContent);
+        body.put("Email", email);
+        body.put("Password", password);
+        body.put("FullName", "Enrique");
 
-        requestInfo.setUrl(Configuration.host + "/api/items.json")
+        requestInfo.setUrl(Configuration.host + "/api/user.json")
                 .setBody(body.toString());
+
         response = FactoryRequest.make(post).send(requestInfo);
-        response.then().statusCode(200).
-                body("Content", equalTo(body.get("Content")));
 
-        String id = response.getBody().path("Id").toString();
-
+        response.then().statusCode(200)
+                .body("Email", equalTo(body.get("Email")))
+                .body("FullName", equalTo(body.get("FullName")));
     }
 
-    private void deleteItem(Integer id){
-        requestInfo.setUrl(Configuration.host + "/api/items/" + id + ".json");
+    private void deleteUser() {
+        requestInfo.setUrl(Configuration.host + "/api/user/0.json")
+                .setBasicAuthNeeded(true);
         response = FactoryRequest.make(delete).send(requestInfo);
         response.then()
                 .statusCode(200)
-                .body("Id", equalTo(id))
-                .body("Deleted", equalTo(true));
-    }
-
-    private void getItems(){
-        requestInfo.setUrl(Configuration.host + "/api/items.json");
-        response = FactoryRequest.make(get).send(requestInfo);
-        response.then().statusCode(200);
-
-        itemIds = response.then().extract().path("Id");
+                .body("Email", equalTo(Configuration.user));
     }
 }
